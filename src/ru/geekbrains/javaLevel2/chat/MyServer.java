@@ -58,7 +58,7 @@ public class MyServer {
         return false;
     }
 
-    public synchronized void sendMsgToClient(ClientHandler fromClient, String targetNick, String msg) {
+    public synchronized void sendPrivateMsg(ClientHandler fromClient, String targetNick, String msg) {
         for (ClientHandler client : clients) {
             if (client.getName().equals(targetNick)) {
                 client.sendMsg("From " + fromClient.getName() + ": " + msg);

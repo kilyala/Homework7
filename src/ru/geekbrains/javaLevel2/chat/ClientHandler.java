@@ -84,9 +84,9 @@ public class ClientHandler {
                 }
                 if (strFromClient.startsWith("/w ")) {
                     String[] parts = strFromClient.split(" ");
-                    String nickTo = parts[1];
-                    String msg = strFromClient.substring(3 + nickTo.length() + 1);
-                    server.sendMsgToClient(this, nickTo, msg);
+                    String targetNick = parts[1];
+                    String msg = strFromClient.substring(3 + targetNick.length() + 1);
+                    server.sendPrivateMsg(this, targetNick, msg);
                 }
                 continue;
             }
