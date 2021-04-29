@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientHandler {
     private MyServer server;
@@ -39,6 +40,10 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
+    private void setDisconnectTime() throws SocketException {
+        System.out.println("Введите верные логин и пароль или будете отключены через 120 секунд");
+        socket.setSoTimeout(120000);
+    }
 
     private void auth() throws IOException {
         while (true) {
@@ -59,11 +64,12 @@ public class ClientHandler {
 
                     } else {
                         sendMsg("Учётная запись уже используется");
+                        setDisconnectTime();
                     }
 
                 } else {
-                    sendMsg("Неверный логин/пароль" + "\n" + "Введите верные данные или будете отключены через 120 секунд");
-                    socket.setSoTimeout(120000);
+                    sendMsg("Неверный логин/пароль");
+                    setDisconnectTime();
                 }
             } else {
                 sendMsg("You need to authorize to start messaging. Use command </auth nick password>");
