@@ -21,10 +21,13 @@ public class ClientHandler {
 
             new Thread(() -> {
                 try {
+                    socket.setSoTimeout(120000);
                     auth();
                     readMsg();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (RuntimeException e) {
+                    System.out.println(e.getMessage());
                 } finally {
                     closeConnection();
                 }
@@ -48,6 +51,7 @@ public class ClientHandler {
                 if (nick != null) {
                     if (!server.inNickBusy(nick)) {
                         sendMsg("/authok " + nick);
+                        socket.setSoTimeout(0);
                         name = nick;
                         server.broadcastMsg(name + " зашёл в чат");
                         server.subscribe(this);
@@ -58,7 +62,8 @@ public class ClientHandler {
                     }
 
                 } else {
-                    sendMsg("Неверный логин/пароль");
+                    sendMsg("Неверный логин/пароль" + "\n" + "Введите верные данные или будете отключены через 120 секунд");
+                    socket.setSoTimeout(120000);
                 }
             } else {
                 sendMsg("You need to authorize to start messaging. Use command </auth nick password>");
@@ -111,6 +116,8 @@ public class ClientHandler {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
     }
 
